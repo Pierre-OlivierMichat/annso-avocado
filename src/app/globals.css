@@ -1,8 +1,62 @@
 @import "tailwindcss";
 
+@font-face {
+  font-family: "Switzer";
+  src: url("/fonts/WEB/fonts/Switzer-Light.woff2") format("woff2");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Switzer";
+  src: url("/fonts/WEB/fonts/Switzer-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Switzer";
+  src: url("/fonts/WEB/fonts/Switzer-Medium.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Switzer";
+  src: url("/fonts/WEB/fonts/Switzer-Semibold.woff2") format("woff2");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Switzer";
+  src: url("/fonts/WEB/fonts/Switzer-Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
+
+  /* Design tokens from Figma — orrisparis.com */
+  --color-cabbage-pont: #444b3e;
+  --color-spring-wood: #f9f7f2;
+  --color-mine-shaft: #313131;
+  --color-white: #ffffff;
+  --color-black: #000000;
+
+  /* Design system palette */
+  --color-forest: #53783b;
+  --color-olive: #7b964a;
+  --color-lime: #b3c656;
+  --color-gold: #fcdb7e;
+  --color-cream: #fce198;
 }
 
 @theme inline {
@@ -19,8 +73,432 @@
   }
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: "Switzer", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+/* GPU-accelerated animation targets */
+.will-animate {
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .will-animate {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* ==================== Navbar ==================== */
+
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 100;
+}
+
+.navbar__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: transparent;
+  padding: 12px 30px 12px 20px;
+  box-shadow: none;
+  position: relative;
+  transition: background-color 0.4s ease, box-shadow 0.4s ease;
+}
+
+.navbar--scrolled .navbar__inner {
+  background-color: transparent;
+  box-shadow: none;
+}
+
+/* Skip to content — visually hidden until focused */
+.navbar__skip {
+  position: absolute;
+  left: 0;
+  top: 0;
+  background: var(--color-spring-wood);
+  color: var(--color-mine-shaft);
+  padding: 16px;
+  font-family: "Switzer", sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.navbar__skip:focus {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Center logo in hero */
+.navbar__logo {
+  position: fixed;
+  left: 50%;
+  top: 38vh;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  z-index: 101;
+  will-change: transform, opacity;
+}
+
+.navbar__logo img {
+  height: 160px;
+  width: auto;
+  filter: brightness(0) invert(1);
+}
+
+/* Left nav links */
+.navbar__links {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.navbar__link {
+  font-family: "Switzer", sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 24px;
+  color: var(--color-white);
+  text-decoration: none;
+  white-space: nowrap;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 10px 0;
+  display: flex;
+  align-items: center;
+  transition: color 0.4s cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+
+.navbar__link:hover {
+  opacity: 1;
+}
+
+/* Right icon buttons */
+.navbar__icons {
+  display: flex;
+  align-items: center;
+}
+
+.navbar__icon-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  color: var(--color-white);
+  background: none;
+  border: none;
+  border-radius: 40px;
+  cursor: pointer;
+  position: relative;
+  transition: color 0.4s cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+
+.navbar__icon-btn:hover {
+  opacity: 1;
+}
+
+/* Navbar dark mode — toggled via GSAP when over light sections */
+.navbar--dark .navbar__link {
+  color: var(--color-forest);
+}
+
+.navbar--dark .navbar__icon-btn {
+  color: var(--color-forest);
+}
+
+/* Mobile navbar — match logo color in hero */
+@media (max-width: 640px) {
+  .navbar__icon-btn {
+    color: var(--color-forest);
+  }
+
+  .navbar__link {
+    color: var(--color-forest);
+  }
+
+  .navbar__logo img {
+    filter: brightness(0) invert(42%) sepia(30%) saturate(600%) hue-rotate(60deg) brightness(92%);
+  }
+
+  /* Override navbar--dark so icons stay consistent on mobile */
+  .navbar--dark .navbar__icon-btn {
+    color: var(--color-forest);
+  }
+
+  .navbar--dark .navbar__link {
+    color: var(--color-forest);
+  }
+}
+
+/* ==================== Hero Grid ==================== */
+
+.hero-grid {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.hero-grid__layer {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  will-change: transform, filter;
+}
+
+.hero-grid__overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0);
+  pointer-events: none;
+  will-change: opacity;
+}
+
+.hero-grid__cell {
+  flex: 1 1 0%;
+  position: relative !important;
+  overflow: hidden;
+  background-color: #eaeaea;
+  min-width: 0;
+}
+
+.hero-grid__image {
+  object-fit: cover;
+  transform: scale(1.05);
+}
+
+/* ==================== Rich Text Banner ==================== */
+
+.rich-text-banner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: var(--color-cabbage-pont);
+  padding: 39px 40px 40px;
+  position: relative;
+  z-index: 10;
+}
+
+.rich-text-banner__content {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: center;
+  max-width: 624px;
+  width: 100%;
+}
+
+.rich-text-banner__heading {
+  font-family: "Switzer", sans-serif;
+  font-weight: 400;
+  font-size: 23.7px;
+  line-height: 31.72px;
+  color: #e7e6e6;
+  text-align: center;
+  margin: 0;
+}
+
+.rich-text-banner__body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.rich-text-banner__body p {
+  font-family: "Switzer", sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 24.5px;
+  color: #e7e6e6;
+  text-align: center;
+  margin: 0;
+}
+
+/* ==================== Product Grid ==================== */
+
+.product-grid {
+  position: relative;
+  z-index: 10;
+  background-color: var(--color-spring-wood);
+  padding: 80px 40px;
+}
+
+.product-grid__header {
+  text-align: center;
+  padding-bottom: 16px;
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  background-color: var(--color-spring-wood);
+}
+
+.product-grid__title {
+  font-family: "Switzer", sans-serif;
+  font-weight: 300;
+  font-size: 40px;
+  line-height: 1.2;
+  color: var(--color-mine-shaft);
+  margin: 0 0 12px;
+  letter-spacing: -0.02em;
+}
+
+.product-grid__subtitle {
+  font-family: "Switzer", sans-serif;
+  font-weight: 400;
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--color-cabbage-pont);
+  margin: 0;
+}
+
+.product-grid__items {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+  max-width: 1320px;
+  margin: 0 auto;
+}
+
+/* Product Card */
+
+.product-card {
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+}
+
+.product-card__image-wrapper {
+  position: relative;
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+  background-color: #eaeaea;
+  border-radius: 2px;
+}
+
+.product-card__image {
+  object-fit: cover;
+}
+
+.product-card__badge {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  font-family: "Switzer", sans-serif;
+  font-weight: 500;
+  font-size: 11px;
+  line-height: 1;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-white);
+  background-color: var(--color-forest);
+  padding: 6px 10px;
+  border-radius: 2px;
+  z-index: 2;
+}
+
+.product-card__badge--bestseller {
+  background-color: var(--color-mine-shaft);
+}
+
+.product-card__info {
+  padding: 14px 0 0;
+}
+
+.product-card__name {
+  font-family: "Switzer", sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 1.4;
+  color: var(--color-mine-shaft);
+  margin: 0 0 4px;
+}
+
+.product-card__price {
+  font-family: "Switzer", sans-serif;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 1.4;
+  color: var(--color-mine-shaft);
+  margin: 0 0 10px;
+}
+
+.product-card__swatches {
+  display: flex;
+  gap: 6px;
+}
+
+.product-card__swatch {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(0, 0, 0, 0.12);
+}
+
+/* Responsive breakpoints */
+
+@media (max-width: 1024px) {
+  .product-grid__items {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+
+  .product-grid {
+    padding: 60px 30px;
+  }
+
+  .product-grid__title {
+    font-size: 34px;
+  }
+}
+
+@media (max-width: 640px) {
+  .product-grid__items {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+
+  .product-grid {
+    padding: 48px 20px;
+  }
+
+  .product-grid__header {
+    margin-bottom: 40px;
+    top: 0;
+    padding-top: 76px;
+  }
+
+  .product-grid__title {
+    font-size: 28px;
+  }
+
+  .product-grid__subtitle {
+    font-size: 13px;
+  }
 }
