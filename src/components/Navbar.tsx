@@ -70,7 +70,7 @@ const linkHover = {
 
 const linkTransition = {
   duration: 0.35,
-  ease: [0.25, 0.1, 0.25, 1],
+  ease: [0.25, 0.1, 0.25, 1] as const,
 };
 
 export default function Navbar() {

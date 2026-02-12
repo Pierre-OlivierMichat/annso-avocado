@@ -42,3 +42,5 @@ next-env.d.ts
 
 # windows reserved device names
 nul
+
+.vercel
